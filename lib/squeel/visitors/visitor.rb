@@ -137,8 +137,10 @@ module Squeel
       # @return [Boolean] Whether or not the Arel visitor will try to quote the
       #   object if not passed as an SqlLiteral.
       def quoted?(object)
+        int_classes = 1.class == Integer ? [Integer] : [Bignum, Fixnum]
+
         case object
-        when Arel::Nodes::SqlLiteral, Bignum, Fixnum,
+        when Arel::Nodes::SqlLiteral, *int_classes
           Arel::SelectManager
           false
         when NilClass
@@ -208,6 +210,7 @@ module Squeel
         object
       end
 
+      alias :visit_Integer :visit_passthrough
       alias :visit_Fixnum :visit_passthrough
       alias :visit_Bignum :visit_passthrough
 
